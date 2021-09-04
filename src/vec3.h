@@ -49,5 +49,23 @@ class vec3
 using point3 = vec3;//3D point
 using color = vec3;//RGB color
 
-//vec3 Utility functions
+/*vec3 Utility functions
+operator<<
+operator+
+operator-
+operator* : with vec3
+operator* : with scalar and vec3
+operator* : with vec3 and scalar
+operator/
+double dot : dot product
+vec3 cross : cross product
+vec3 unit_vector : get unit vector(length = 1.0)
+*/
+
+inline std::ostream&  operator<<(std::ostream &out, const vec3 &v){
+    return out << v.elem[0] << ' ' << v.elem[1] << ' ' << v.elem[2];
+}
+
+
+
 #endif
