@@ -4,7 +4,23 @@
 #include <ray.h>
 #include <iostream>
 
+bool is_sphere_hit(const point3& center, const double& radius, const ray& r)
+{
+    vec3 oc = r.origin() - center;
+    auto a = dot(r.direction(), r.direction());
+    auto b = 2*dot(r.direction(), oc);
+    auto c = dot(oc, oc) - radius * radius;
+    auto determ = b*b - 4*a*c;
+    return(determ >= 0);
+}
+
 color ray_color(const ray& r){
+    //sphere
+    if(is_sphere_hit(point3(0, 0, -1), 0.5, r))
+    {
+        return color(0.0, 1.0, 0.0);
+    }
+    //gradient background
     //scale to (-1.0 1.0)
     vec3 unit_direction = unit_vector(r.direction());
     //scale to (0.0 1.0)
