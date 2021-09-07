@@ -3,28 +3,41 @@
 #include <color.h>
 #include <ray.h>
 #include <iostream>
+#include <math.h>
 
-bool is_sphere_hit(const point3& center, const double& radius, const ray& r)
+double is_sphere_hit(const point3& center, const double& radius, const ray& r)
 {
     vec3 oc = r.origin() - center;
-    auto a = dot(r.direction(), r.direction());
-    auto b = 2*dot(r.direction(), oc);
+    //square equasin with a = dot(direction, direction) and b=2h
+    auto a = r.direction().length_squared();
+    auto half_b = dot(r.direction(), oc);
     auto c = dot(oc, oc) - radius * radius;
-    auto determ = b*b - 4*a*c;
-    return(determ >= 0);
+    auto discr = half_b*half_b - a*c;
+    if(discr < 0)
+    {
+        return -1;
+    }
+    else
+    {
+        return (-half_b - sqrt(discr)) / a;
+    }
+    
 }
 
 color ray_color(const ray& r){
     //sphere
-    if(is_sphere_hit(point3(0, 0, -1), 0.5, r))
+    auto t = is_sphere_hit(point3(0, 0, -1), 0.5, r);
+    if(t > 0)
     {
-        return color(0.0, 1.0, 0.0);
-    }
+        vec3 N = unit_vector(r.at(t) - vec3(0, 0, -1));
+        //convert to 0-1 range
+        return 0.5*color(N.x() + 1, N.y() + 1, N.z() + 1);
+    } 
     //gradient background
     //scale to (-1.0 1.0)
     vec3 unit_direction = unit_vector(r.direction());
     //scale to (0.0 1.0)
-    auto t = 0.5 *(unit_direction.y() + 1);
+    t = 0.5 *(unit_direction.y() + 1);
     //lerp between white and blue
     return color((1-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.0, 0.0, 1.0));
 }

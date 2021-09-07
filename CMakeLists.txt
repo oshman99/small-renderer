@@ -8,7 +8,9 @@ set(RENDERER_SRC
     src/main.cpp
     src/vec3.h
     src/color.h
-    src/ray.h)
+    src/ray.h
+    src/hittable.h
+    src/sphere.h)
 
 #Executable
 add_executable(small_rndr ${RENDERER_SRC})
