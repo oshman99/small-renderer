@@ -37,7 +37,7 @@ color ray_color(const ray& r){
     //scale to (-1.0 1.0)
     vec3 unit_direction = unit_vector(r.direction());
     //scale to (0.0 1.0)
-    t = 0.5 *(unit_direction.y() + 1);
+    t = 0.5*(unit_direction.y() + 1);
     //lerp between white and blue
     return color((1-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.0, 0.0, 1.0));
 }
