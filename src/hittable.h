@@ -21,7 +21,7 @@ struct hit_record
 class Hittable
 {
     public:
-    //= 0 - pure virtual method, implementation should be provided, const - not suppose to cahnge data of the class
+    //= 0 - pure virtual method, implementation should be provided by deriving class, const - not suppose to cahnge data of the class
         virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const = 0;
 };
 

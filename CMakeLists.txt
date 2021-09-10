@@ -10,7 +10,8 @@ set(RENDERER_SRC
     src/color.h
     src/ray.h
     src/hittable.h
-    src/sphere.h)
+    src/sphere.h
+    src/hittable_list.h)
 
 #Executable
 add_executable(small_rndr ${RENDERER_SRC})
