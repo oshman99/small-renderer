@@ -2,7 +2,7 @@
 #define SPHERE_H
 #include <hittable.h>
 #include <vec3.h>
-class Sphere : Hittable
+class Sphere : public Hittable
 {
     public:
         Sphere () {}
@@ -28,10 +28,10 @@ bool Sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) cons
     auto sqrtd = sqrt(discr);
     auto root = (-half_b - sqrtd) / a;
     //find nearest root in accceptable range
-    if(root > t_min || root < t_max)
+    if(root < t_min || t_max < root)
     {
         root = (-half_b + sqrtd) / a;
-        if(root > t_min || root < t_max)
+        if(root < t_min || t_max < root)
             return false;
     }
     rec.t  = root;
@@ -39,6 +39,7 @@ bool Sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) cons
     //basicly unit vector computation,maybe just use unit_vector()?
     vec3 outward_normal = (rec.p - center)/radius;
     rec.set_face_and_normal(r, outward_normal);
+    
     return true;
 }
 #endif
