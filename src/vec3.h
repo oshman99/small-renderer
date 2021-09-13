@@ -19,27 +19,42 @@ class vec3
         vec3 operator-() const {return vec3(-e[0], -e[1], -e[2]);}
         double operator[](int i) const {return e[i];}
         double& operator[](int i) {return e[i];}
+
         vec3 operator+=(const vec3 v) {
             e[0] += v[0];
             e[1] += v[1];
             e[2] += v[2];
             return *this;
         }
+
         vec3 operator*=(const double t) {
             e[0] *= t;
             e[1] *= t;
             e[2] *= t;
             return *this;
         }
+
         vec3 operator/=(const double t) {
             
             return *this *= 1/t;
         }
+
         double length_squared() const {
             return e[0]*e[0] + e[1]*e[1] + e[2]*e[2];
         }
+
         double length() const{
             return std::sqrt(length_squared());
+        }
+
+        inline static vec3 random()
+        {
+            return vec3(random_double(), random_double(), random_double());
+        }
+
+        inline static vec3 random(double min, double max)
+        {
+            return vec3(random_double(min, max), random_double(min, max), random_double(min, max));
         }
     //data members
     public:
@@ -103,5 +118,32 @@ inline vec3 cross(const vec3 &v1,const vec3 &v2){
 
 inline vec3 unit_vector(const vec3 &v){
     return v/v.length(); 
+}
+
+
+vec3 random_in_unit_sphere()
+{
+    while(true)
+    {
+        vec3 p = vec3::random(-1, 1);
+        //length_squared() insted of length() to avoid useless calculations - 1^2 = 1 duh 
+        if (p.length_squared() >= 1)
+            continue;
+        return p;
+    }
+}
+
+vec3 random_unit_vector()
+{
+    return unit_vector(random_in_unit_sphere());
+}
+
+vec3 random_in_hemisphere(const vec3& normal)
+{
+    vec3 in_unit_sphere = random_in_unit_sphere();
+    if(dot(in_unit_sphere, normal) > 0.0)
+        return in_unit_sphere;
+    else
+        return -in_unit_sphere; 
 }
 #endif

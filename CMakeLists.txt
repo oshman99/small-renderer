@@ -12,7 +12,8 @@ set(RENDERER_SRC
     src/hittable.h
     src/sphere.h
     src/hittable_list.h
-    src/common_stuff.h)
+    src/common_stuff.h
+    src/camera.h)
 
 #Executable
 add_executable(small_rndr ${RENDERER_SRC})
