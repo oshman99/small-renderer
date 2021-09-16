@@ -1,7 +1,6 @@
 #ifndef HITTBLE_H
 #define HITTBLE_H
 
-#include <ray.h>
 #include <common_stuff.h>
 
 class Material;
@@ -11,9 +10,7 @@ struct hit_record
     point3 p;
     vec3 normal;
     double t;
-
     std::shared_ptr<Material> mat_ptr;
-
     bool front_face;
 
     inline void set_face_and_normal(const ray& r, const vec3& outward_normal)

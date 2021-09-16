@@ -5,6 +5,7 @@
 #include "sphere.h"
 #include "hittable_list.h"
 #include "camera.h"
+#include "material.h"
 
 color ray_color(const ray& r, HittableList world, int depth){
     hit_record rec;
@@ -13,12 +14,14 @@ color ray_color(const ray& r, HittableList world, int depth){
     
     if(world.hit(r, 0.001, infinity, rec))
     {
-        //point3 target = rec.p + rec.normal + random_unit_vector();
-        point3 target = rec.p + rec.normal + random_in_hemisphere(rec.normal);
-        return 0.5 * ray_color(ray(rec.p, target - rec.p), world, depth - 1);
+        ray scattered;
+        color attenuation;
+        if(rec.mat_ptr->scatter(r, rec, attenuation, scattered))
+            return attenuation * ray_color(scattered, world, depth-1);//colot bounces untill max depth is reached, attenuation = material's albedo
+        return color(0, 0, 0);
     }
     vec3 unit_direction = unit_vector(r.direction());
-    auto t = 0.5*(unit_direction.y() + 1.0);
+    auto t = 0.5*(unit_direction.y() + 1.0);//-1~1 -> 0~1
     return (1.0 - t)*color(1.0, 1.0, 1.0) + t*(color(0.5, 0.7, 1.0));
 
 }
@@ -31,13 +34,23 @@ int main()
     const int img_height = static_cast<int>(img_width / aspect_ratio);
     const int sampels_per_pixel = 25;
     const int max_depth = 50;
+
+    //Materials
+    auto material_ground = std::make_shared<Lambertian>(color(0.8, 0.8, 0.0));
+    auto material_center = std::make_shared<Lambertian>(color(0.7, 0.3, 0.3));
+    auto material_left   = std::make_shared<Metal>(color(0.8, 0.8, 0.8));
+    auto material_right  = std::make_shared<Metal>(color(0.8, 0.6, 0.2));
+
     //World obj
     HittableList world;
-    world.add(std::make_shared<Sphere>(point3(0, 0, -1), 0.5));
-    world.add(std::make_shared<Sphere>(point3(0, -100.5, -1), 100));
+    world.add(std::make_shared<Sphere>(point3(0, 0, -1), 0.5, material_center));
+    world.add(std::make_shared<Sphere>(point3(-1, 0, -1), 0.5, material_left));
+    world.add(std::make_shared<Sphere>(point3(1, 0, -1), 0.5, material_right));
+    world.add(std::make_shared<Sphere>(point3(0, -100.5, -1), 100, material_ground));
 
     //Camera
     Camera cam;
+
 
     //Render
     std::cout << "P3 \n" << img_width << " " << img_height << std::endl << "255 \n";

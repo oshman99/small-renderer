@@ -18,7 +18,7 @@ class Sphere : public Hittable
 bool Sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const
 {
     vec3 oc = r.origin() - center;
-    //square equasin with a = dot(direction, direction) and b=2h
+    //square equasion with a = dot(direction, direction) and b=2h
     auto a = r.direction().length_squared();
     auto half_b = dot(r.direction(), oc);
     auto c = dot(oc, oc) - radius * radius;
