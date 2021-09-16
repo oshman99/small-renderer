@@ -6,12 +6,13 @@ class Sphere : public Hittable
 {
     public:
         Sphere () {}
-        Sphere(point3 cent, double r): center(cent), radius(r) {}
+        Sphere(point3 cent, double r, std::shared_ptr<Material> mat): center(cent), radius(r), mat_ptr(mat) {}
         virtual bool hit(const ray& r, double t_min, double t_max, hit_record& rec) const override;
 
     public:
         point3 center;
         double radius;
+        std::shared_ptr<Material> mat_ptr;
 };
 
 bool Sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) const
@@ -36,6 +37,7 @@ bool Sphere::hit(const ray& r, double t_min, double t_max, hit_record& rec) cons
     }
     rec.t  = root;
     rec.p = r.at(rec.t);
+    rec.mat_ptr = mat_ptr;
     //basicly unit vector computation,maybe just use unit_vector()?
     vec3 outward_normal = (rec.p - center)/radius;
     rec.set_face_and_normal(r, outward_normal);
